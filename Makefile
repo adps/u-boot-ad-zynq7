@@ -338,6 +338,7 @@ endif
 
 # Always append ALL so that arch config.mk's can add custom ones
 ALL-y += $(obj)u-boot.srec $(obj)u-boot.bin $(obj)System.map
+ALL-y += $(obj)BOOT.bin
 
 ALL-$(CONFIG_NAND_U_BOOT) += $(obj)u-boot-nand.bin
 ALL-$(CONFIG_ONENAND_U_BOOT) += $(obj)u-boot-onenand.bin
@@ -350,6 +351,7 @@ ifneq ($(CONFIG_SPL_TARGET),)
 ALL-$(CONFIG_SPL) += $(obj)$(CONFIG_SPL_TARGET:"%"=%)
 endif
 ALL-$(CONFIG_REMAKE_ELF) += $(obj)u-boot.elf
+
 
 # enable combined SPL/u-boot/dtb rules for tegra
 ifneq ($(CONFIG_TEGRA),)
@@ -398,8 +400,13 @@ $(obj)u-boot.ldr:	$(obj)u-boot
 $(obj)u-boot.ldr.hex:	$(obj)u-boot.ldr
 		$(OBJCOPY) ${OBJCFLAGS} -O ihex $< $@ -I binary
 
-$(obj)u-boot.ldr.srec:	$(obj)u-boot.ldr
+$(obj)u-boot.ldr.srec:	$(obj)u-boot.ldr   
 		$(OBJCOPY) ${OBJCFLAGS} -O srec $< $@ -I binary
+		
+$(obj)BOOT.bin:	$(obj)u-boot
+		cp $(obj)u-boot $(obj)u-boot.elf
+		bootgen -image board/$(VENDOR)/$(BOARD)/BOOT.bin.bif -o $(obj)BOOT.bin -w
+		
 
 #
 # U-Boot entry point, needed for booting of full-blown U-Boot
@@ -586,7 +593,7 @@ $(obj)spl/u-boot-spl.bin:	$(SUBDIR_TOOLS) depend
 
 $(obj)tpl/u-boot-tpl.bin:	$(SUBDIR_TOOLS) depend
 		$(MAKE) -C spl all CONFIG_TPL_BUILD=y
-
+		
 # Explicitly make _depend in subdirs containing multiple targets to prevent
 # parallel sub-makes creating .depend files simultaneously.
 depend dep:	$(TIMESTAMP_FILE) $(VERSION_FILE) \

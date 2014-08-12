@@ -1,0 +1,14 @@
+/*
+ * ADMXRC7Z1 board DTS
+ *
+ * Copyright (C) 2014 Alpha Data Parallel Systems Ltd.
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
+ */
+/dts-v1/;
+#include "zynq-7000.dtsi"
+
+/ {
+	model = "Zynq ADMXRC7Z1 Board";
+	compatible = "adps,admxrc7z1", "xlnx,zynq-7000";
+};
