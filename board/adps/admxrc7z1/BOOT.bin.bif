@@ -1,5 +1,5 @@
 the_ROM_image:
 {
-	[bootloader]board/adps/admxrc7z1/admxrc7z1_fsbl.elf
+	[bootloader]board/adps/admxrc7z1/admxrc7z_fsbl.elf
 	build/u-boot.elf
 }
